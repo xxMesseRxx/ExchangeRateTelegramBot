@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TelegramBot.Library
 {
-	public enum Currency
+	public enum CurrencyType
 	{
 		UAH,
 		AUD,
