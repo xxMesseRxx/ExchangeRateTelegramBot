@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TelegramBot.Library;
+using TelegramBot.Model;
 
 namespace TelegramBot.Services
 {
-	public class ExchangeRateService : IExchangeRateService
+	public class RequestToPrivatBank : IRequestToPrivatBank
 	{
-		public decimal GetRate(CurrencyType currencyType)
+		public List<CurrencyRate> GetCurrencyRates()
 		{
 			throw new NotImplementedException();
 		}
