@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,12 +9,12 @@ namespace TelegramBot.Model
 {
 	public class CurrencyRate
 	{
-		public readonly string BaseCurrency;
-		public readonly string Currency;
-		public readonly decimal SaleRateNB;
-		public readonly decimal PurchaseRateNB;
-		public readonly decimal? SaleRate;
-		public readonly decimal? PurchaseRate;
+		public string BaseCurrency { get; }
+		public string Currency { get; }
+		public decimal SaleRateNB { get; }
+		public decimal PurchaseRateNB { get; }
+		public decimal? SaleRate { get; }
+		public decimal? PurchaseRate { get; }
 
 		public CurrencyRate(string baseCurrency, string currency,
 							decimal saleRateNB, decimal purchaseRateNB,
