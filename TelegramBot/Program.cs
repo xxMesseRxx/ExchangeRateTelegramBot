@@ -6,9 +6,6 @@ using TelegramBot.Services;
 
 var myBot = new TelegramBotClient("5962347349:AAHOYGIfohV1Rw8AFmnYtkaPvOzLJIQaspg");
 myBot.StartReceiving(HandleUpdateAsync, HandlePollingErrorAsync);
-ExchangeRateService req = new ExchangeRateService(CurrencyType.USD, new DateOnly(2015, 3, 10));
-decimal de = await req.GetSaleRateNBAsync();
-Console.WriteLine(de);
 
 Console.ReadLine();
 
