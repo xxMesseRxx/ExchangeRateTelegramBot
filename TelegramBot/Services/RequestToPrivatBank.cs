@@ -24,34 +24,34 @@ namespace TelegramBot.Services
 
 		public List<CurrencyRate> GetCurrencyRates()
 		{
+			List<CurrencyRate> currencyRates = new List<CurrencyRate>();
+
 			_request = (HttpWebRequest)WebRequest.Create(_url);
 			_request.Method = "GET";
 
-			_response = (HttpWebResponse)_request.GetResponse();
-			if (_response.StatusCode == HttpStatusCode.OK)
+			try
 			{
-				using (StreamReader reader = new StreamReader(_response.GetResponseStream()))
+				_response = (HttpWebResponse)_request.GetResponse();
+
+				if (_response.StatusCode == HttpStatusCode.OK)
 				{
-					string str = reader.ReadToEnd();
-					JsonSerializerOptions options = new JsonSerializerOptions();
-					options.PropertyNameCaseInsensitive = true;
-					options.IncludeFields = true;
-					RequiredRate? req = JsonSerializer.Deserialize<RequiredRate>(str, options);
+					using (StreamReader reader = new StreamReader(_response.GetResponseStream()))
+					{
+						string jsonString = reader.ReadToEnd();
 
-					//List<CurrencyRate> cur = new List<CurrencyRate>
-					//{
-					//	new CurrencyRate(baseCurrency: "fbdfh", currency: "sdfg",
-					//					 saleRateNB: 22, purchaseRateNB: 5235)
-					//};
-					//RequiredRate rate = new RequiredRate(date: "sdsd", bank: "234sdf",
-					//									 baseCurrency: 22, baseCurrencyLit: "SDs",
-					//									 exchangeRate: cur);
+						JsonSerializerOptions options = new JsonSerializerOptions();
+						options.PropertyNameCaseInsensitive = true;
 
-					//string sff = JsonSerializer.Serialize(rate);
+						var requiredRate = JsonSerializer.Deserialize<RequiredRate>(jsonString, options);
+						currencyRates = requiredRate?.ExchangeRate.ToList();
+					}
 				}
 			}
+			catch (Exception)
+			{
+			}
 
-			throw new NotImplementedException();
+			return currencyRates;
 		}
 	}
 }

@@ -5,7 +5,7 @@ using TelegramBot.Services;
 
 var myBot = new TelegramBotClient("5962347349:AAHOYGIfohV1Rw8AFmnYtkaPvOzLJIQaspg");
 myBot.StartReceiving(HandleUpdateAsync, HandlePollingErrorAsync);
-RequestToPrivatBank req = new RequestToPrivatBank(DateOnly.Parse("21/01/2019"));
+RequestToPrivatBank req = new RequestToPrivatBank(DateOnly.Parse("21/01/2015"));
 req.GetCurrencyRates();
 
 Console.ReadLine();
