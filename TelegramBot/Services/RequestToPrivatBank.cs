@@ -10,7 +10,7 @@ using TelegramBot.Model;
 
 namespace TelegramBot.Services
 {
-	public class RequestToPrivatBank : IRequestToPrivatBank
+	public class RequestToPrivatBank
 	{
 		private readonly string _url;
 
