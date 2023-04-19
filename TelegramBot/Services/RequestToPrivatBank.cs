@@ -22,7 +22,7 @@ namespace TelegramBot.Services
 			_url = "https://api.privatbank.ua/p24api/exchange_rates?date=" + date.ToShortDateString();
 		}
 
-		public List<CurrencyRate> GetCurrencyRates()
+		public async Task<List<CurrencyRate>> GetCurrencyRatesAsync()
 		{
 			List<CurrencyRate> currencyRates = new List<CurrencyRate>();
 
@@ -31,7 +31,7 @@ namespace TelegramBot.Services
 
 			try
 			{
-				_response = (HttpWebResponse)_request.GetResponse();
+				_response = (HttpWebResponse) await _request.GetResponseAsync();
 
 				if (_response.StatusCode == HttpStatusCode.OK)
 				{

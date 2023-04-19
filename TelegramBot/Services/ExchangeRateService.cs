@@ -20,17 +20,17 @@ namespace TelegramBot.Services
 			_date = date;
 		}
 
-		public decimal GetSaleRateNB()
+		public async Task<decimal> GetSaleRateNBAsync()
 		{
-			SetRequiredCurrencyRate();
+			await SetRequiredCurrencyRateAsync();
 
 			return _requiredCurrencyRate.SaleRateNB;
 		}
 
-		private void SetRequiredCurrencyRate()
+		private async Task SetRequiredCurrencyRateAsync()
 		{
 			RequestToPrivatBank request = new RequestToPrivatBank(_date);
-			List<CurrencyRate> currencyRates = request.GetCurrencyRates();
+			List<CurrencyRate> currencyRates = await request.GetCurrencyRatesAsync();
 
 			if (currencyRates.Count == 0)
 			{
