@@ -37,11 +37,7 @@ namespace TelegramBot.Services
 				throw new ArgumentOutOfRangeException("date");
 			}
 
-			_requiredCurrencyRate = currencyRates.Find(c =>
-			{
-				Enum.TryParse<CurrencyType>(c.Currency, out CurrencyType cType);
-				return cType == _currencyType;
-			});
+			_requiredCurrencyRate = currencyRates.Find(c => c.Currency == _currencyType.ToString());
 
 			if (_requiredCurrencyRate is null)
 			{

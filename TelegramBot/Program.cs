@@ -18,6 +18,9 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
 	if (message.Text is not { } messageText)
 		return;
 
+	CurrencyTextMessageHendler messageHendler = new CurrencyTextMessageHendler(messageText);
+	string response = await messageHendler.GetResponseAsync();
+
 	var chatId = message.Chat.Id;
 
 	Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
@@ -25,7 +28,7 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
 	// Echo received message text
 	Message sentMessage = await botClient.SendTextMessageAsync(
 		chatId: chatId,
-		text: "You said:\n" + messageText);
+		text: response);
 }
 
 Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
