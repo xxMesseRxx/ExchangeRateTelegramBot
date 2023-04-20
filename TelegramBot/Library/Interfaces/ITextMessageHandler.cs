@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TelegramBot.Services
+namespace TelegramBot.Library.Interfaces
 {
-	public class TextMessageHendler
+	public interface ITextMessageHandler
 	{
+		Task<string> GetResponseAsync();
 	}
 }

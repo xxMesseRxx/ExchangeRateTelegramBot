@@ -3,6 +3,7 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using TelegramBot.Library;
 using TelegramBot.Services;
+using TelegramBot.Services.TextHandlers;
 
 var myBot = new TelegramBotClient("5962347349:AAHOYGIfohV1Rw8AFmnYtkaPvOzLJIQaspg");
 myBot.StartReceiving(HandleUpdateAsync, HandlePollingErrorAsync);
@@ -11,21 +12,18 @@ Console.ReadLine();
 
 async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
 {
-	// Only process Message updates: https://core.telegram.org/bots/api#message
 	if (update.Message is not { } message)
 		return;
-	// Only process text messages
 	if (message.Text is not { } messageText)
 		return;
 
-	CurrencyTextMessageHendler messageHendler = new CurrencyTextMessageHendler(messageText);
-	string response = await messageHendler.GetResponseAsync();
+	TextMessageHandler messageHandler = new TextMessageHandler(messageText);
+	string response = await messageHandler.GetResponseAsync();
 
 	var chatId = message.Chat.Id;
 
 	Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
 
-	// Echo received message text
 	Message sentMessage = await botClient.SendTextMessageAsync(
 		chatId: chatId,
 		text: response);
