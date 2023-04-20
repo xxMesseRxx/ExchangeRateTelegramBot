@@ -19,5 +19,18 @@ namespace TelegramBot.Tests
 			//Assert
 			Assert.AreEqual(expectedCurrencyRate, actual);
 		}
+		[TestMethod]
+		public void GetCurrencyRatesAsync_UnexistedDate_0CurrencyRateExpected()
+		{
+			//Arrange
+			RequestToPrivatBank request = new RequestToPrivatBank(new DateOnly(3023, 04, 20));
+			int expectedCurrencyRate = 0;
+
+			//Act
+			int actual = request.GetCurrencyRatesAsync().Result.Count();
+
+			//Assert
+			Assert.AreEqual(expectedCurrencyRate, actual);
+		}
 	}
 }
