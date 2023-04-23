@@ -1,11 +1,17 @@
-﻿using Telegram.Bot;
+﻿using Microsoft.Extensions.Configuration;
+using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using TelegramBot.Library;
 using TelegramBot.Services;
 using TelegramBot.Services.TextHandlers;
 
-var myBot = new TelegramBotClient("5962347349:AAHOYGIfohV1Rw8AFmnYtkaPvOzLJIQaspg");
+IConfiguration config = new ConfigurationBuilder()
+	.SetBasePath(Directory.GetCurrentDirectory())
+	.AddJsonFile("appsettings.json")
+	.Build();
+
+var myBot = new TelegramBotClient(config["TelegramBot:AccessToken"]);
 myBot.StartReceiving(HandleUpdateAsync, HandlePollingErrorAsync);
 
 Console.ReadLine();
