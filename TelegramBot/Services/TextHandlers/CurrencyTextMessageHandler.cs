@@ -11,14 +11,14 @@ using TelegramBot.Library.Interfaces;
 
 public class CurrencyTextMessageHandler : ITextMessageHandler
 {
-    private string _message;
+    private string[] _messageWords;
     private CurrencyType _currencyType;
     private DateOnly _date;
 
-    public CurrencyTextMessageHandler(string message)
+    public CurrencyTextMessageHandler(string[] messageWords)
     {
-        _message = message;
-    }
+		_messageWords = messageWords;
+	}
 
     public async Task<string> GetResponseAsync()
     {
@@ -53,27 +53,23 @@ public class CurrencyTextMessageHandler : ITextMessageHandler
 
     private void SetCurrencyAndDate()
     {
-        List<string> messageParts = SplitMessage();
+        CheckMessageWordsCount();
 
-        if (!Enum.TryParse(messageParts[0].ToUpper(), out _currencyType))
+		if (!Enum.TryParse(_messageWords[0].ToUpper(), out _currencyType))
         {
             throw new ArgumentException("Currency type wasn't found");
         }
 
-        if (!DateOnly.TryParse(messageParts[1], new CultureInfo("ru-RU"), DateTimeStyles.None, out _date))
+        if (!DateOnly.TryParse(_messageWords[1], new CultureInfo("ru-RU"), DateTimeStyles.None, out _date))
         {
             throw new ArgumentException("Date is incorrect");
         }
     }
-    private List<string> SplitMessage()
+    private void CheckMessageWordsCount()
     {
-        List<string> messageParts = new List<string>(_message.Split(' '));
-
-        if (messageParts.Count != 2)
+        if (_messageWords.Count() != 2)
         {
-            throw new ArgumentException("Message is incorrect");
+            throw new ArgumentException("MessageWords are incorrect");
         }
-
-        return messageParts;
     }
 }

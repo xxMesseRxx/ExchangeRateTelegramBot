@@ -30,18 +30,16 @@ public class TextMessageHandler : ITextMessageHandler
 
     private void ChooseAnswerService()
     {
-        string patternCourrencyRate = @"^\s*[a-z]{3}\s*[0-3]?\d[.\/][0-1]?\d[.\/]\d{4}\s*$";
-        string patternCommand = @"^\s*\/[a-z]{1,15}\s*$";
+		RemoveExtraSpaces();
+        string[] messageWords = _message.Split(' ');
 
-        if (Regex.IsMatch(_message, patternCommand, RegexOptions.IgnoreCase))
+		if (messageWords.Count() == 1)
         {
-			RemoveExtraSpaces();
             _messageHandler = new CommandTextMessageHandler(_message);
 		}
-        else if (Regex.IsMatch(_message, patternCourrencyRate, RegexOptions.IgnoreCase))
+        else if (messageWords.Count() == 2)
         {
-            RemoveExtraSpaces();
-			_messageHandler = new CurrencyTextMessageHandler(_message);        
+			_messageHandler = new CurrencyTextMessageHandler(messageWords);        
         }
         else
         {
