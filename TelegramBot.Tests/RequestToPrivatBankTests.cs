@@ -1,36 +1,35 @@
+namespace TelegramBot.Tests;
+
 using TelegramBot.Model;
 using TelegramBot.Services;
 
-namespace TelegramBot.Tests
+[TestClass]
+public class RequestToPrivatBankTests
 {
-	[TestClass]
-	public class RequestToPrivatBankTests
+	[TestMethod]
+	public void GetCurrencyRatesAsync_DateWithExistData_26CurrencyRateExpected()
 	{
-		[TestMethod]
-		public void GetCurrencyRatesAsync_DateWithExistData_26CurrencyRateExpected()
-		{
-			//Arrange
-			RequestToPrivatBank request = new RequestToPrivatBank(new DateOnly(2023, 04, 20));
-			int expectedCurrencyRate = 26;
+		//Arrange
+		RequestToPrivatBank request = new RequestToPrivatBank(new DateOnly(2023, 04, 20));
+		int expectedCurrencyRate = 26;
 
-			//Act
-			int actual = request.GetCurrencyRatesAsync().Result.Count();
+		//Act
+		int actual = request.GetCurrencyRatesAsync().Result.Count();
 
-			//Assert
-			Assert.AreEqual(expectedCurrencyRate, actual);
-		}
-		[TestMethod]
-		public void GetCurrencyRatesAsync_UnexistedDate_0CurrencyRateExpected()
-		{
-			//Arrange
-			RequestToPrivatBank request = new RequestToPrivatBank(new DateOnly(3023, 04, 20));
-			int expectedCurrencyRate = 0;
+		//Assert
+		Assert.AreEqual(expectedCurrencyRate, actual);
+	}
+	[TestMethod]
+	public void GetCurrencyRatesAsync_UnexistedDate_0CurrencyRateExpected()
+	{
+		//Arrange
+		RequestToPrivatBank request = new RequestToPrivatBank(new DateOnly(3023, 04, 20));
+		int expectedCurrencyRate = 0;
 
-			//Act
-			int actual = request.GetCurrencyRatesAsync().Result.Count();
+		//Act
+		int actual = request.GetCurrencyRatesAsync().Result.Count();
 
-			//Assert
-			Assert.AreEqual(expectedCurrencyRate, actual);
-		}
+		//Assert
+		Assert.AreEqual(expectedCurrencyRate, actual);
 	}
 }

@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿namespace TelegramBot.Services;
+
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,45 +12,42 @@ using TelegramBot.Model;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 
-namespace TelegramBot.Services
+public class RequestToPrivatBank
 {
-	public class RequestToPrivatBank
+	private readonly string _date;
+
+	private static HttpClient _httpClient;
+	private static string _baseUrl;
+
+	public RequestToPrivatBank(DateOnly date)
 	{
-		private readonly string _date;
+		_date = date.ToShortDateString();
+	}
+	static RequestToPrivatBank()
+	{
+		_httpClient = new HttpClient();
 
-		private static HttpClient _httpClient;
-		private static string _baseUrl;
+		IConfiguration config = new ConfigurationBuilder()
+			.SetBasePath(Directory.GetCurrentDirectory())
+			.AddJsonFile("appsettings.json")
+			.Build();
 
-		public RequestToPrivatBank(DateOnly date)
+		_baseUrl = config["URLs:PrivatBank"];
+	}
+
+	public async Task<List<CurrencyRate>> GetCurrencyRatesAsync()
+	{
+		List<CurrencyRate> currencyRates = new List<CurrencyRate>();
+
+		try
 		{
-			_date = date.ToShortDateString();
+			var requiredRate = await _httpClient.GetFromJsonAsync<RequiredRate>(_baseUrl + _date);
+			currencyRates = requiredRate?.ExchangeRate.ToList();
 		}
-		static RequestToPrivatBank()
+		catch (Exception)
 		{
-			_httpClient = new HttpClient();
-
-			IConfiguration config = new ConfigurationBuilder()
-				.SetBasePath(Directory.GetCurrentDirectory())
-				.AddJsonFile("appsettings.json")
-				.Build();
-
-			_baseUrl = config["URLs:PrivatBank"];
 		}
 
-		public async Task<List<CurrencyRate>> GetCurrencyRatesAsync()
-		{
-			List<CurrencyRate> currencyRates = new List<CurrencyRate>();
-
-			try
-			{
-				var requiredRate = await _httpClient.GetFromJsonAsync<RequiredRate>(_baseUrl + _date);
-				currencyRates = requiredRate?.ExchangeRate.ToList();
-			}
-			catch (Exception)
-			{
-			}
-
-			return currencyRates;
-		}
+		return currencyRates;
 	}
 }
