@@ -7,45 +7,42 @@ using System.Text;
 using System.Threading.Tasks;
 using TelegramBot.Library;
 using TelegramBot.Model;
+using Microsoft.Extensions.Configuration;
+using System.Net.Http.Json;
 
 namespace TelegramBot.Services
 {
 	public class RequestToPrivatBank
 	{
-		private readonly string _url;
+		private readonly string _date;
 
-		private HttpWebRequest _request;
-		private HttpWebResponse _response;
+		private static HttpClient _httpClient;
+		private static string _baseUrl;
 
 		public RequestToPrivatBank(DateOnly date)
 		{
-			_url = "https://api.privatbank.ua/p24api/exchange_rates?date=" + date.ToShortDateString();
+			_date = date.ToShortDateString();
+		}
+		static RequestToPrivatBank()
+		{
+			_httpClient = new HttpClient();
+
+			IConfiguration config = new ConfigurationBuilder()
+				.SetBasePath(Directory.GetCurrentDirectory())
+				.AddJsonFile("appsettings.json")
+				.Build();
+
+			_baseUrl = config["URLs:PrivatBank"];
 		}
 
 		public async Task<List<CurrencyRate>> GetCurrencyRatesAsync()
 		{
 			List<CurrencyRate> currencyRates = new List<CurrencyRate>();
 
-			_request = (HttpWebRequest)WebRequest.Create(_url);
-			_request.Method = "GET";
-
 			try
 			{
-				_response = (HttpWebResponse) await _request.GetResponseAsync();
-
-				if (_response.StatusCode == HttpStatusCode.OK)
-				{
-					using (StreamReader reader = new StreamReader(_response.GetResponseStream()))
-					{
-						string jsonString = reader.ReadToEnd();
-
-						JsonSerializerOptions options = new JsonSerializerOptions();
-						options.PropertyNameCaseInsensitive = true;
-
-						var requiredRate = JsonSerializer.Deserialize<RequiredRate>(jsonString, options);
-						currencyRates = requiredRate?.ExchangeRate.ToList();
-					}
-				}
+				var requiredRate = await _httpClient.GetFromJsonAsync<RequiredRate>(_baseUrl + _date);
+				currencyRates = requiredRate?.ExchangeRate.ToList();
 			}
 			catch (Exception)
 			{

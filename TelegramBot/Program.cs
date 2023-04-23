@@ -13,6 +13,7 @@ IConfiguration config = new ConfigurationBuilder()
 
 var myBot = new TelegramBotClient(config["TelegramBot:AccessToken"]);
 myBot.StartReceiving(HandleUpdateAsync, HandlePollingErrorAsync);
+Console.WriteLine($"Hello, I'm {myBot.GetMeAsync().Result.Username}");
 
 Console.ReadLine();
 
@@ -23,12 +24,12 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
 	if (message.Text is not { } messageText)
 		return;
 
-	TextMessageHandler messageHandler = new TextMessageHandler(messageText);
-	string response = await messageHandler.GetResponseAsync();
-
 	var chatId = message.Chat.Id;
 
 	Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
+
+	TextMessageHandler messageHandler = new TextMessageHandler(messageText);
+	string response = await messageHandler.GetResponseAsync();
 
 	Message sentMessage = await botClient.SendTextMessageAsync(
 		chatId: chatId,
