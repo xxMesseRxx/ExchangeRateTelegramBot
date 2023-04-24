@@ -30,7 +30,6 @@ public class RequestToPrivatBank
 
 		_baseUrl = config["URLs:PrivatBank"];
 	}
-
 	public RequestToPrivatBank(DateOnly date)
 	{
 		_date = date.ToShortDateString();
