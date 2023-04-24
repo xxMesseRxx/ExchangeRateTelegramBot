@@ -19,10 +19,6 @@ public class RequestToPrivatBank
 	private static HttpClient _httpClient;
 	private static string _baseUrl;
 
-	public RequestToPrivatBank(DateOnly date)
-	{
-		_date = date.ToShortDateString();
-	}
 	static RequestToPrivatBank()
 	{
 		_httpClient = new HttpClient();
@@ -33,6 +29,11 @@ public class RequestToPrivatBank
 			.Build();
 
 		_baseUrl = config["URLs:PrivatBank"];
+	}
+
+	public RequestToPrivatBank(DateOnly date)
+	{
+		_date = date.ToShortDateString();
 	}
 
 	public async Task<List<CurrencyRate>> GetCurrencyRatesAsync()
